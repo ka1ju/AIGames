@@ -5,8 +5,8 @@ import random
 from random import randint
 
 # Game parameters
-WIDTH = 400
-HEIGHT = 800
+WIDTH = 500
+HEIGHT = 1000
 FPS = 60
 
 # Colors
@@ -41,6 +41,13 @@ movingFigure = Figure()
 figures = []
 while running:
     clock.tick(FPS)
+    screen.fill(BLACK)
+    for i in range(9):
+        pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
+                         ((i + 1) * (WIDTH // 10), 0), ((i + 1) * (WIDTH // 10), HEIGHT))
+    for i in range(19):
+        pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
+                         (0, (i + 1) * (HEIGHT // 20)), (WIDTH, (i + 1) * (HEIGHT // 20)))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
