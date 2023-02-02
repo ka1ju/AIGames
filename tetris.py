@@ -101,10 +101,10 @@ while running:
             if event.key == pygame.K_s:
                 movingFigure.y += 1
             if event.key == pygame.K_a:
-                if movingFigure.x >= 0:
+                if movingFigure.x * WIDTH // 10 >= WIDTH // 10:
                     movingFigure.x -= 1
             if event.key == pygame.K_d:
-                if movingFigure.x <= WIDTH - 50:
+                if (movingFigure.x + len(max(movingFigure.form, key=lambda x: len(x)))) * WIDTH // 10 <= WIDTH - WIDTH // 10:
                     movingFigure.x += 1
             if event.key == pygame.K_q:
                 pass
