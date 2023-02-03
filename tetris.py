@@ -20,6 +20,7 @@ GREEN = (0, 255, 0)
 CYAN = (0, 255, 255)
 BLUE = (0, 0, 255)
 PURPLE = (255, 0, 255)
+LIGHT_GREY = (200, 200, 200)
 
 pygame.init()
 pygame.mixer.init()
@@ -60,8 +61,6 @@ for i in range(19):
                      (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
 movingFigure = Figure()
-figuresBlocked = []
-heights = [HEIGHT] * 20
 timer = FPS // 2
 while running:
     clock.tick(FPS)
@@ -74,38 +73,39 @@ while running:
                          (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
     isStop = False
+    t = 0
     for j in range(len(movingFigure.form)):
         for i in range(len(movingFigure.form[j])):
             if movingFigure.form[j][i] == 1:
                 pygame.draw.rect(screen, movingFigure.color,
                                  ((movingFigure.x + i) * blockWidth, (movingFigure.y + j) * blockHeight,
                                   blockWidth, blockHeight))
-            if (movingFigure.y + j + 1) * blockHeight >= heights[movingFigure.x + i]:
-                isStop = True
+            if movingFigure.y + j + 1 == 20 or (gameField[movingFigure.y + j + 1][movingFigure.x + i] == 1 and movingFigure.form[j][i] == 1):
+                if movingFigure.y == 0:
+                    gameField = []
+                    movingFigure = Figure()
+                    for _ in range(20):
+                        gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                else:
+                    isStop = True
     if isStop:
-        figuresBlocked.append(movingFigure)
-        print(movingFigure.form)
         for j in range(len(movingFigure.form)):
             for i in range(len(movingFigure.form[j])):
                 if movingFigure.form[j][i] == 1:
-                    print(movingFigure.y + j, movingFigure.x + i)
-                    print(gameField[17:])
                     gameField[movingFigure.y + j][movingFigure.x + i] = 1
-                    print(gameField[17:])
-                    print()
+        if [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in gameField:
+            gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+            gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         movingFigure = Figure()
     if timer == 0:
         movingFigure.y += 1
         timer = FPS // 2
     else:
         timer -= 1
-    for g in figuresBlocked:
-        for j in range(len(g.form)):
-            for i in range(len(g.form[j])):
-                if g.form[j][i] == 1:
-                    pygame.draw.rect(screen, g.color,
-                                     ((g.x + i) * blockWidth, (g.y + j) * blockHeight,
-                                      blockWidth, blockHeight))
+    for j in range(20):
+        for i in range(10):
+            if gameField[j][i] == 1:
+                pygame.draw.rect(screen, LIGHT_GREY, (i * blockWidth, j * blockHeight, blockWidth, blockHeight))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
