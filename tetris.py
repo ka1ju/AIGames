@@ -121,5 +121,5 @@ while running:
                     for i in range(len(movingFigure.form)):
                         part.append(movingFigure.form[i][j])
                     newFigure.append(list(reversed(part)))
-                movingFigure.form = list(reversed(newFigure))
+                movingFigure.form = newFigure
     pygame.display.flip()
