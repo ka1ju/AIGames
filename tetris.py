@@ -112,7 +112,8 @@ while running:
             sys.exit()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_s:
-                if movingFigure.y < 19:
+                if movingFigure.y + len(movingFigure.form) + 1 == 20 or \
+                        gameField[movingFigure.y + len(movingFigure.form) + 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]:
                     movingFigure.y += 1
             if event.key == pygame.K_a:
                 if movingFigure.x * WIDTH // 10 >= WIDTH // 10:
