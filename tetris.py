@@ -109,7 +109,20 @@ while running:
                 if (movingFigure.x + len(max(movingFigure.form, key=lambda x: len(x)))) * WIDTH // 10 <= WIDTH - WIDTH // 10:
                     movingFigure.x += 1
             if event.key == pygame.K_q:
-                pass
+                newFigure = []
+                for j in range(len(movingFigure.form[0])):
+                    newFigure.append([])
+                    for i in range(len(movingFigure.form)):
+                        newFigure[j].append(movingFigure.form[i][j])
+                movingFigure.form = list(reversed(newFigure))
             if event.key == pygame.K_e:
-                pass
+                newFigure = []
+                for j in range(len(movingFigure.form[0])):
+                    part = []
+                    for i in range(len(movingFigure.form)):
+                        part.append(movingFigure.form[i][j])
+                    newFigure.append(list(reversed(part)))
+                print(movingFigure.form)
+                print(newFigure)
+                movingFigure.form = list(reversed(newFigure))
     pygame.display.flip()
