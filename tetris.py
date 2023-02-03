@@ -86,6 +86,7 @@ while running:
                     movingFigure = Figure()
                     for _ in range(20):
                         gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                    score = 0
                 else:
                     isStop = True
     if isStop:
