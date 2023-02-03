@@ -96,6 +96,7 @@ while running:
         if [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in gameField:
             gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
             gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            score += 10
         movingFigure = Figure()
     if timer == 0:
         movingFigure.y += 1
@@ -137,4 +138,6 @@ while running:
                         part.append(movingFigure.form[i][j])
                     newFigure.append(list(reversed(part)))
                 movingFigure.form = newFigure
+    text1 = fontBig.render(str(score), True, WHITE)
+    screen.blit(text1, (WIDTH // 2 - 7.5, 0))
     pygame.display.flip()
