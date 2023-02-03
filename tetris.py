@@ -38,6 +38,9 @@ figureTypes = [
     [[0, 1, 0], [1, 1, 1]],
     [[1, 0, 0], [1, 1, 1]]
 ]
+gameField = []
+for _ in range(20):
+    gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
 
 # Class
@@ -81,6 +84,15 @@ while running:
                 isStop = True
     if isStop:
         figuresBlocked.append(movingFigure)
+        print(movingFigure.form)
+        for j in range(len(movingFigure.form)):
+            for i in range(len(movingFigure.form[j])):
+                if movingFigure.form[j][i] == 1:
+                    print(movingFigure.y + j, movingFigure.x + i)
+                    print(gameField[17:])
+                    gameField[movingFigure.y + j][movingFigure.x + i] = 1
+                    print(gameField[17:])
+                    print()
         movingFigure = Figure()
     if timer == 0:
         movingFigure.y += 1
@@ -100,12 +112,14 @@ while running:
             sys.exit()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_s:
-                movingFigure.y += 1
+                if movingFigure.y < 19:
+                    movingFigure.y += 1
             if event.key == pygame.K_a:
                 if movingFigure.x * WIDTH // 10 >= WIDTH // 10:
                     movingFigure.x -= 1
             if event.key == pygame.K_d:
-                if (movingFigure.x + len(max(movingFigure.form, key=lambda x: len(x)))) * WIDTH // 10 <= WIDTH - WIDTH // 10:
+                if (movingFigure.x + len(
+                        max(movingFigure.form, key=lambda x: len(x)))) * WIDTH // 10 <= WIDTH - WIDTH // 10:
                     movingFigure.x += 1
             if event.key == pygame.K_q:
                 newFigure = []
