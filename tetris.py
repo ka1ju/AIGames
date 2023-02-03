@@ -59,7 +59,6 @@ for i in range(19):
 movingFigure = Figure()
 figuresBlocked = []
 heights = [HEIGHT] * 20
-print(heights)
 timer = FPS // 2
 while running:
     clock.tick(FPS)
@@ -122,7 +121,5 @@ while running:
                     for i in range(len(movingFigure.form)):
                         part.append(movingFigure.form[i][j])
                     newFigure.append(list(reversed(part)))
-                print(movingFigure.form)
-                print(newFigure)
                 movingFigure.form = list(reversed(newFigure))
     pygame.display.flip()
