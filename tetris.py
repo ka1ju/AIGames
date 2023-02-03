@@ -8,6 +8,8 @@ from random import randint
 WIDTH = 500
 HEIGHT = 1000
 FPS = 60
+blockWidth = WIDTH // 10
+blockHeight = HEIGHT // 20
 
 # Colors
 BLACK = (0, 0, 0)
@@ -49,41 +51,41 @@ class Figure:
 
 for i in range(9):
     pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
-                     ((i + 1) * (WIDTH // 10), 0), ((i + 1) * (WIDTH // 10), HEIGHT))
+                     ((i + 1) * blockWidth, 0), ((i + 1) * blockWidth, HEIGHT))
 for i in range(19):
     pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
-                     (0, (i + 1) * (HEIGHT // 20)), (WIDTH, (i + 1) * (HEIGHT // 20)))
+                     (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
 movingFigure = Figure()
 figuresBlocked = []
 heights = [HEIGHT] * 20
 print(heights)
-timer = FPS
+timer = FPS // 2
 while running:
     clock.tick(FPS)
     screen.fill(BLACK)
     for i in range(9):
         pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
-                         ((i + 1) * (WIDTH // 10), 0), ((i + 1) * (WIDTH // 10), HEIGHT))
+                         ((i + 1) * blockWidth, 0), ((i + 1) * blockWidth, HEIGHT))
     for i in range(19):
         pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
-                         (0, (i + 1) * (HEIGHT // 20)), (WIDTH, (i + 1) * (HEIGHT // 20)))
+                         (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
+    isStop = False
     for j in range(len(movingFigure.form)):
         for i in range(len(movingFigure.form[j])):
             if movingFigure.form[j][i] == 1:
                 pygame.draw.rect(screen, movingFigure.color,
-                                 ((movingFigure.x + i) * WIDTH // 10, (movingFigure.y + j) * HEIGHT // 20,
-                                  WIDTH // 10, HEIGHT // 20))
-
-    for j in range(len(movingFigure.form)):
-        for i in range(len(movingFigure.form[j])):
-            if (movingFigure.y + j + 1) * HEIGHT // 20 >= heights[movingFigure.x + i]:
-                figuresBlocked.append(movingFigure)
-                movingFigure = Figure()
+                                 ((movingFigure.x + i) * blockWidth, (movingFigure.y + j) * blockHeight,
+                                  blockWidth, blockHeight))
+            if (movingFigure.y + j + 1) * blockHeight >= heights[movingFigure.x + i]:
+                isStop = True
+    if isStop:
+        figuresBlocked.append(movingFigure)
+        movingFigure = Figure()
     if timer == 0:
         movingFigure.y += 1
-        timer = FPS
+        timer = FPS // 2
     else:
         timer -= 1
     for g in figuresBlocked:
@@ -91,8 +93,8 @@ while running:
             for i in range(len(g.form[j])):
                 if g.form[j][i] == 1:
                     pygame.draw.rect(screen, g.color,
-                                     ((g.x + i) * WIDTH // 10, (g.y + j) * HEIGHT // 20,
-                                      WIDTH // 10, HEIGHT // 20))
+                                     ((g.x + i) * blockWidth, (g.y + j) * blockHeight,
+                                      blockWidth, blockHeight))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
