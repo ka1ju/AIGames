@@ -51,6 +51,7 @@ class Figure:
         self.y = 0
         self.form = random.choice(figureTypes)
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
+        self.timer = FPS // 2
 
 
 for i in range(9):
@@ -61,7 +62,6 @@ for i in range(19):
                      (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
 movingFigure = Figure()
-timer = FPS // 2
 while running:
     clock.tick(FPS)
     screen.fill(BLACK)
@@ -99,11 +99,11 @@ while running:
             gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             score += 10
         movingFigure = Figure()
-    if timer == 0:
+    if movingFigure.timer == 0:
         movingFigure.y += 1
-        timer = FPS // 2
+        movingFigure.timer = FPS // 2
     else:
-        timer -= 1
+        movingFigure.timer -= 1
     for j in range(20):
         for i in range(10):
             if gameField[j][i] == 1:
