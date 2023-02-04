@@ -116,15 +116,14 @@ while running:
             sys.exit()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_s:
-                if mF.y + len(mF.form) + 1 == 20 or \
-                        mF.gameField[mF.y + len(mF.form)] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]:
+                if mF.y + len(mF.form) + 1 != 20 or \
+                        mF.gameField[mF.y + len(mF.form)][mF.x:mF.x + len(mF.form[1])] == [0, 0, 0]:
                     mF.y += 1
             if event.key == pygame.K_a:
                 if mF.x * WIDTH // 10 >= WIDTH // 10:
                     mF.x -= 1
             if event.key == pygame.K_d:
-                if (mF.x + len(
-                        max(mF.form, key=lambda x: len(x)))) * WIDTH // 10 <= WIDTH - WIDTH // 10:
+                if (mF.x + len(mF.form[0])) * WIDTH // 10 <= WIDTH - WIDTH // 10:
                     mF.x += 1
             if event.key == pygame.K_q:
                 newFigure = []
