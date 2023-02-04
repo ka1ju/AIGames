@@ -28,10 +28,8 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Tetris")
 clock = pygame.time.Clock()
 running = True
-score = 0
 fontLittle = pygame.font.Font(None, 25)
 fontBig = pygame.font.Font(None, 50)
-text1 = fontBig.render(str(score), True, (0, 0, 0))
 figureTypes = [
     [[1, 1, 0], [0, 1, 1]],
     [[0, 0, 1], [1, 1, 1]],
@@ -51,6 +49,7 @@ class Figure:
         self.timer = FPS // 2
         self.isStop = False
         self.gameField = []
+        self.score = 0
         for _ in range(20):
             self.gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
@@ -71,6 +70,7 @@ for i in range(19):
                      (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
 mF = Figure()
+text1 = fontBig.render(str(mF.score), True, (0, 0, 0))
 while running:
     clock.tick(FPS)
     screen.fill(BLACK)
@@ -89,10 +89,7 @@ while running:
                                   blockWidth, blockHeight))
             if mF.y + j + 1 == 20 or (mF.gameField[mF.y + j + 1][mF.x + i] == 1 and mF.form[j][i] == 1):
                 if mF.y == 0:
-                    mF.update()
-                    for _ in range(20):
-                        mF.gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-                    score = 0
+                    mF = Figure()
                 else:
                     mF.isStop = True
     if mF.isStop:
@@ -103,7 +100,7 @@ while running:
         if [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mF.gameField:
             mF.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
             mF.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-            score += 10
+            mF.score += 10
         mF.update()
     if mF.timer == 0:
         mF.y += 1
@@ -145,6 +142,6 @@ while running:
                         part.append(mF.form[i][j])
                     newFigure.append(list(reversed(part)))
                 mF.form = newFigure
-    text1 = fontBig.render(str(score), True, WHITE)
+    text1 = fontBig.render(str(mF.score), True, WHITE)
     screen.blit(text1, (WIDTH // 2 - 7.5, 0))
     pygame.display.flip()
