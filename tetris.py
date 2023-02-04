@@ -39,14 +39,22 @@ figureTypes = [
     [[0, 1, 0], [1, 1, 1]],
     [[1, 0, 0], [1, 1, 1]]
 ]
-gameField = []
-for _ in range(20):
-    gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
 
 # Class
 class Figure:
     def __init__(self):
+        self.x = randint(0, 7)
+        self.y = 0
+        self.form = random.choice(figureTypes)
+        self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
+        self.timer = FPS // 2
+        self.isStop = False
+        self.gameField = []
+        for _ in range(20):
+            self.gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+
+    def update(self):
         self.x = randint(0, 7)
         self.y = 0
         self.form = random.choice(figureTypes)
@@ -79,12 +87,11 @@ while running:
                 pygame.draw.rect(screen, mF.color,
                                  ((mF.x + i) * blockWidth, (mF.y + j) * blockHeight,
                                   blockWidth, blockHeight))
-            if mF.y + j + 1 == 20 or (gameField[mF.y + j + 1][mF.x + i] == 1 and mF.form[j][i] == 1):
+            if mF.y + j + 1 == 20 or (mF.gameField[mF.y + j + 1][mF.x + i] == 1 and mF.form[j][i] == 1):
                 if mF.y == 0:
-                    gameField = []
-                    mF = Figure()
+                    mF.update()
                     for _ in range(20):
-                        gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                        mF.gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
                     score = 0
                 else:
                     mF.isStop = True
@@ -92,12 +99,12 @@ while running:
         for j in range(len(mF.form)):
             for i in range(len(mF.form[j])):
                 if mF.form[j][i] == 1:
-                    gameField[mF.y + j][mF.x + i] = 1
-        if [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in gameField:
-            gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
-            gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                    mF.gameField[mF.y + j][mF.x + i] = 1
+        if [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mF.gameField:
+            mF.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+            mF.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             score += 10
-        mF = Figure()
+        mF.update()
     if mF.timer == 0:
         mF.y += 1
         mF.timer = FPS // 2
@@ -105,7 +112,7 @@ while running:
         mF.timer -= 1
     for j in range(20):
         for i in range(10):
-            if gameField[j][i] == 1:
+            if mF.gameField[j][i] == 1:
                 pygame.draw.rect(screen, LIGHT_GREY, (i * blockWidth, j * blockHeight, blockWidth, blockHeight))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -114,7 +121,7 @@ while running:
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_s:
                 if mF.y + len(mF.form) + 1 == 20 or \
-                        gameField[mF.y + len(mF.form)] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]:
+                        mF.gameField[mF.y + len(mF.form)] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]:
                     mF.y += 1
             if event.key == pygame.K_a:
                 if mF.x * WIDTH // 10 >= WIDTH // 10:
