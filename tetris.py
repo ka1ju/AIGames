@@ -80,7 +80,6 @@ while running:
     for i in range(19):
         pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
                          (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
-
     for j in range(len(mF.form)):
         for i in range(len(mF.form[j])):
             if mF.form[j][i] == 1:
