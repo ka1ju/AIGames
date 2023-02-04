@@ -119,6 +119,7 @@ while running:
                 if mF.y + len(mF.form) + 1 != 20 or \
                         mF.gameField[mF.y + len(mF.form)][mF.x:mF.x + len(mF.form[1])] == [0, 0, 0]:
                     mF.y += 1
+            # TODO: Fix bug when figures can move into another figures on "A" and "D"
             if event.key == pygame.K_a:
                 if mF.x * WIDTH // 10 >= WIDTH // 10:
                     mF.x -= 1
