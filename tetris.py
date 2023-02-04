@@ -52,6 +52,7 @@ class Figure:
         self.form = random.choice(figureTypes)
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
         self.timer = FPS // 2
+        self.isStop = False
 
 
 for i in range(9):
@@ -72,8 +73,6 @@ while running:
         pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
                          (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
-    isStop = False
-    t = 0
     for j in range(len(movingFigure.form)):
         for i in range(len(movingFigure.form[j])):
             if movingFigure.form[j][i] == 1:
@@ -88,8 +87,8 @@ while running:
                         gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
                     score = 0
                 else:
-                    isStop = True
-    if isStop:
+                    movingFigure.isStop = True
+    if movingFigure.isStop:
         for j in range(len(movingFigure.form)):
             for i in range(len(movingFigure.form[j])):
                 if movingFigure.form[j][i] == 1:
