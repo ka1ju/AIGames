@@ -69,8 +69,8 @@ for i in range(19):
     pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
                      (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
-mF = Figure()
-text1 = fontBig.render(str(mF.score), True, (0, 0, 0))
+mf = Figure()
+text1 = fontBig.render(str(mf.score), True, (0, 0, 0))
 while running:
     clock.tick(FPS)
     screen.fill(BLACK)
@@ -80,35 +80,35 @@ while running:
     for i in range(19):
         pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
                          (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
-    for j in range(len(mF.form)):
-        for i in range(len(mF.form[j])):
-            if mF.form[j][i] == 1:
-                pygame.draw.rect(screen, mF.color,
-                                 ((mF.x + i) * blockWidth, (mF.y + j) * blockHeight,
+    for j in range(len(mf.form)):
+        for i in range(len(mf.form[j])):
+            if mf.form[j][i] == 1:
+                pygame.draw.rect(screen, mf.color,
+                                 ((mf.x + i) * blockWidth, (mf.y + j) * blockHeight,
                                   blockWidth, blockHeight))
-            if mF.y + j + 1 == 20 or (mF.gameField[mF.y + j + 1][mF.x + i] == 1 and mF.form[j][i] == 1):
-                if mF.y == 0:
-                    mF = Figure()
-                else:
-                    mF.isStop = True
-    if mF.isStop:
-        for j in range(len(mF.form)):
-            for i in range(len(mF.form[j])):
-                if mF.form[j][i] == 1:
-                    mF.gameField[mF.y + j][mF.x + i] = 1
-        if [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mF.gameField:
-            mF.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
-            mF.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-            mF.score += 10
-        mF.update()
-    if mF.timer == 0:
-        mF.y += 1
-        mF.timer = FPS // 2
+                if mf.y + j + 1 == 20 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
+                    if mf.y == 0:
+                        mf = Figure()
+                    else:
+                        mf.isStop = True
+    if mf.isStop:
+        for j in range(len(mf.form)):
+            for i in range(len(mf.form[j])):
+                if mf.form[j][i] == 1:
+                    mf.gameField[mf.y + j][mf.x + i] = 1
+        if [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mf.gameField:
+            mf.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+            mf.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+            mf.score += 10
+        mf.update()
+    if mf.timer == 0:
+        mf.y += 1
+        mf.timer = FPS // 2
     else:
-        mF.timer -= 1
+        mf.timer -= 1
     for j in range(20):
         for i in range(10):
-            if mF.gameField[j][i] == 1:
+            if mf.gameField[j][i] == 1:
                 pygame.draw.rect(screen, LIGHT_GREY, (i * blockWidth, j * blockHeight, blockWidth, blockHeight))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -116,31 +116,45 @@ while running:
             sys.exit()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_s:
-                if mF.y + len(mF.form) + 1 != 20 or \
-                        mF.gameField[mF.y + len(mF.form)][mF.x:mF.x + len(mF.form[1])] == [0, 0, 0]:
-                    mF.y += 1
+                if mf.y + len(mf.form) + 1 != 20 or \
+                        mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[1])] == [0, 0, 0]:
+                    mf.y += 1
             # TODO: Fix bug when figures can move into another figures on "A" and "D"
             if event.key == pygame.K_a:
-                if mF.x * WIDTH // 10 >= WIDTH // 10:
-                    mF.x -= 1
+                if mf.x > 0:
+                    k = True
+                    for i in range(len(mf.form)):
+                        if mf.form[i][0] + mf.gameField[mf.y + i][mf.x - 1] == 2:
+                            k = False
+                    if k:
+                        mf.x -= 1
             if event.key == pygame.K_d:
-                if (mF.x + len(mF.form[0])) * WIDTH // 10 <= WIDTH - WIDTH // 10:
-                    mF.x += 1
+                if mf.x + len(mf.form[0]) < 10:
+                    k = True
+                    for i in range(len(mf.form)):
+                        if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[0])] == 2:
+                            k = False
+                    if k:
+                        mf.x += 1
             if event.key == pygame.K_q:
                 newFigure = []
-                for j in range(len(mF.form[0])):
+                for j in range(len(mf.form[0])):
                     newFigure.append([])
-                    for i in range(len(mF.form)):
-                        newFigure[j].append(mF.form[i][j])
-                mF.form = list(reversed(newFigure))
+                    for i in range(len(mf.form)):
+                        newFigure[j].append(mf.form[i][j])
+                mf.form = list(reversed(newFigure))
+                if len(mf.form[0]) == 3 and mf.x + 2 == 10:
+                    mf.x -= 1
             if event.key == pygame.K_e:
                 newFigure = []
-                for j in range(len(mF.form[0])):
+                for j in range(len(mf.form[0])):
                     part = []
-                    for i in range(len(mF.form)):
-                        part.append(mF.form[i][j])
+                    for i in range(len(mf.form)):
+                        part.append(mf.form[i][j])
                     newFigure.append(list(reversed(part)))
-                mF.form = newFigure
-    text1 = fontBig.render(str(mF.score), True, WHITE)
+                mf.form = newFigure
+                if len(mf.form[0]) == 3 and mf.x + 2 == 10:
+                    mf.x -= 1
+    text1 = fontBig.render(str(mf.score), True, WHITE)
     screen.blit(text1, (WIDTH // 2 - 7.5, 0))
     pygame.display.flip()
