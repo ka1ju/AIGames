@@ -137,23 +137,22 @@ while running:
                         mf.x += 1
             if event.key == pygame.K_q:
                 newFigure = []
-                for j in range(len(mf.form[0])):
-                    newFigure.append([])
-                    for i in range(len(mf.form)):
-                        newFigure[j].append(mf.form[i][j])
-                mf.form = list(reversed(newFigure))
-                if len(mf.form[0]) == 3 and mf.x + 2 == 10:
-                    mf.x -= 1
+                if mf.x + len(mf.form[0]) < 10:
+                    for g in range(len(mf.form)):
+                        for j in range(len(mf.form[0])):
+                            newFigure.append([])
+                            for i in range(len(mf.form)):
+                                newFigure[j].append(mf.form[i][j])
+                        mf.form = list(reversed(newFigure))
             if event.key == pygame.K_e:
                 newFigure = []
-                for j in range(len(mf.form[0])):
-                    part = []
-                    for i in range(len(mf.form)):
-                        part.append(mf.form[i][j])
-                    newFigure.append(list(reversed(part)))
-                mf.form = newFigure
-                if len(mf.form[0]) == 3 and mf.x + 2 == 10:
-                    mf.x -= 1
+                if mf.x + len(mf.form[0]) < 10:
+                    for j in range(len(mf.form[0])):
+                        part = []
+                        for i in range(len(mf.form)):
+                            part.append(mf.form[i][j])
+                        newFigure.append(list(reversed(part)))
+                    mf.form = newFigure
     text1 = fontBig.render(str(mf.score), True, WHITE)
     screen.blit(text1, (WIDTH // 2 - 7.5, 0))
     pygame.display.flip()
