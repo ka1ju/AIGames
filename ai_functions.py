@@ -35,17 +35,14 @@ def choose_best_position(mf_def1):
                         if k:
                             mf.x -= 1
                 elif t == 'i':
-                    if mf.x + len(mf.form[0]) < 10:
-                        k = True
-                        for i in range(len(mf.form)):
-                            print(i)
-                            print(mf.y + i)
-                            print(mf.x + len(mf.form[i]))
-                            print()
-                            if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[i])] == 2:
-                                k = False
-                        if k:
-                            mf.x += 1
+                    if mf.y + len(mf.form) < 19:
+                        if mf.x + len(mf.form[0]) < 10:
+                            k = True
+                            for i in range(len(mf.form)):
+                                if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[i])] == 2:
+                                    k = False
+                            if k:
+                                mf.x += 1
             while z == 0:
                 for j in range(len(mf.form)):
                     for i in range(len(mf.form[j])):

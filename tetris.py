@@ -111,7 +111,7 @@ while running:
         mf.update()
     if mf.timer == 0 and mf.y + len(mf.form) < 20:
         mf.y += 1
-        mf.timer = FPS // 2
+        mf.timer = 0
     else:
         mf.timer -= 1
     for j in range(20):
@@ -139,9 +139,9 @@ while running:
                     newFigure[j].append(mf.form[i][j])
             mf.form = list(reversed(newFigure))
     elif strategy == 'd':
-        if mf.y + len(mf.form) + 1 < 20 or \
-                mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[1])] == [0, 0, 0]:
-            mf.y += 1
+        if mf.y + len(mf.form) + 1 < 19:
+            if mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[0])] == [0] * len(mf.form[0]):
+                mf.y += 1
     elif strategy == 'l':
         if mf.x > 0:
             k = True
