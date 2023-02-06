@@ -1,5 +1,10 @@
 import random
 
+h = {''}
+def availible_positions(name_of_block, field):
+    print(name_of_block)
+    print(*field, sep='\n')
 
-def availible_positions(block, field):
-    pass
+if __name__ == '__main__':
+    h = [[0] * 10] * 20
+    availible_positions('kara', h)
