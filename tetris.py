@@ -38,7 +38,9 @@ figureTypes = [
     [[0, 0, 1], [1, 1, 1]],
     [[0, 1, 1], [1, 1, 0]],
     [[0, 1, 0], [1, 1, 1]],
-    [[1, 0, 0], [1, 1, 1]]
+    [[1, 0, 0], [1, 1, 1]],
+    [[1, 1, 1, 1]],
+    [[1, 1], [1, 1]]
 ]
 
 
@@ -83,20 +85,21 @@ while running:
     for i in range(19):
         pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
                          (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
+    z = 0
     for j in range(len(mf.form)):
-        for i in range(len(mf.form[j])):
-            if mf.form[j][i] == 1:
-                pygame.draw.rect(screen, mf.color,
-                                 ((mf.x + i) * blockWidth, (mf.y + j) * blockHeight,
-                                  blockWidth, blockHeight))
-                if mf.y + j + 1 == 20 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
-                    if mf.y == 0:
-                        mf = Figure()
-                    else:
-                        mf.isStop = True
+        if z == 0:
+            for i in range(len(mf.form[j])):
+                if mf.form[j][i] == 1:
+                    pygame.draw.rect(screen, mf.color,
+                                     ((mf.x + i) * blockWidth, (mf.y + j) * blockHeight,
+                                      blockWidth, blockHeight))
+                    if mf.y + j + 1 == 20 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
+                        z = 1
+                        if mf.y == 0:
+                            mf = Figure()
+                        else:
+                            mf.isStop = True
     if mf.isStop:
-        print(*mf.form, sep='\n')
-        print()
         for j in range(len(mf.form)):
             for i in range(len(mf.form[j])):
                 if mf.form[j][i] == 1:
@@ -125,6 +128,8 @@ while running:
     pygame.display.flip()
     mf1 = copy.deepcopy(mf)
     strategy = choose_best_positin(mf1)
+    if mf.form == [[1, 1], [1, 1]] and strategy == 'r':
+        strategy = 'd'
     if strategy == 'r':
         newFigure = []
         for j in range(len(mf.form[0])):
@@ -135,7 +140,7 @@ while running:
         if len(mf.form[0]) == 3 and mf.x + 2 == 10:
             mf.x -= 1
     elif strategy == 'd':
-        if mf.y + len(mf.form) + 1 != 20 or \
+        if mf.y + len(mf.form) < 20 or \
                 mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[1])] == [0, 0, 0]:
             mf.y += 1
     elif strategy == 'l':
