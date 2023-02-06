@@ -39,7 +39,7 @@ def choose_best_positin(mf_def1):
                         if mf.x + len(mf.form[0]) < 10:
                             k = True
                             for i in range(len(mf.form)):
-                                if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[0])] == 2:
+                                if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[i])] == 2:
                                     k = False
                             if k:
                                 mf.x += 1
@@ -47,7 +47,6 @@ def choose_best_positin(mf_def1):
                     for j in range(len(mf.form)):
                         for i in range(len(mf.form[j])):
                             if mf.form[j][i] == 1:
-                                print(mf.y + j + 1, mf.x + i)
                                 if mf.y + len(mf.form) + 1 > 19 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
                                     if z == 0:
                                         z = 1
