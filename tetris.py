@@ -46,7 +46,7 @@ figureTypes = [
 # Class
 class Figure:
     def __init__(self):
-        self.x = randint(0, 7)
+        self.x = randint(0, 6)
         self.y = 0
         self.form = random.choice(figureTypes)
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
@@ -58,7 +58,7 @@ class Figure:
             self.gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def update(self):
-        self.x = randint(0, 7)
+        self.x = randint(0, 6)
         self.y = 0
         self.form = random.choice(figureTypes)
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
@@ -109,7 +109,7 @@ while running:
             mf.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             mf.score += 10
         mf.update()
-    if mf.timer == 0:
+    if mf.timer == 0 and mf.y + len(mf.form) < 20:
         mf.y += 1
         mf.timer = FPS // 2
     else:
@@ -127,20 +127,19 @@ while running:
     screen.blit(text1, (WIDTH // 2 - 7.5, 0))
     pygame.display.flip()
     mf1 = copy.deepcopy(mf)
-    strategy = choose_best_positin(mf1)
+    strategy = choose_best_position(mf1)
     if mf.form == [[1, 1], [1, 1]] and strategy == 'r':
         strategy = 'd'
     if strategy == 'r':
-        newFigure = []
-        for j in range(len(mf.form[0])):
-            newFigure.append([])
-            for i in range(len(mf.form)):
-                newFigure[j].append(mf.form[i][j])
-        mf.form = list(reversed(newFigure))
-        if len(mf.form[0]) == 3 and mf.x + 2 == 10:
-            mf.x -= 1
+        if len(mf.form) + mf.x < 10:
+            newFigure = []
+            for j in range(len(mf.form[0])):
+                newFigure.append([])
+                for i in range(len(mf.form)):
+                    newFigure[j].append(mf.form[i][j])
+            mf.form = list(reversed(newFigure))
     elif strategy == 'd':
-        if mf.y + len(mf.form) < 20 or \
+        if mf.y + len(mf.form) + 1 < 20 or \
                 mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[1])] == [0, 0, 0]:
             mf.y += 1
     elif strategy == 'l':
