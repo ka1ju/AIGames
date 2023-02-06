@@ -96,7 +96,7 @@ while running:
             for i in range(len(mf.form[j])):
                 if mf.form[j][i] == 1:
                     mf.gameField[mf.y + j][mf.x + i] = 1
-        if [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mf.gameField:
+        while [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mf.gameField:
             mf.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
             mf.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
             mf.score += 10
