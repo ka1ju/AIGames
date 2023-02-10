@@ -8,10 +8,12 @@ import time
 import copy
 
 # Game parameters
-WIDTH = 500
+distance = 20
+game_counts = 4
+WIDTH = 500 * game_counts + distance * game_counts
 HEIGHT = 1000
 FPS = 60
-blockWidth = WIDTH // 10
+blockWidth = 50
 blockHeight = HEIGHT // 20
 
 # Colors
@@ -45,7 +47,10 @@ figureTypes = [
 
 # Class
 class Figure:
-    def __init__(self):
+    def __init__(self, dist, ratios):
+        self.placed =0
+        self.dist = dist
+        self.ratio = ratios.copy()
         self.x = randint(0, 6)
         self.y = 0
         self.form = random.choice(figureTypes)
@@ -73,88 +78,112 @@ for i in range(19):
     pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
                      (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
 
-mf = Figure()
-text1 = fontBig.render(str(mf.score), True, (0, 0, 0))
+games = []
+for i in range(game_counts):
+    games.append(Figure(500 * i + distance * i, [randint(-50, 50), randint(-50, 50), randint(-50, 50)]))
+text1 = fontBig.render(str(0), True, (0, 0, 0))
 while running:
-    clock.tick(FPS)
-    screen.fill(BLACK)
-    for i in range(9):
-        pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
-                         ((i + 1) * blockWidth, 0), ((i + 1) * blockWidth, HEIGHT))
-    for i in range(19):
-        pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
-                         (0, (i + 1) * blockHeight), (WIDTH, (i + 1) * blockHeight))
-    z = 0
-    for j in range(len(mf.form)):
-        if z == 0:
-            for i in range(len(mf.form[j])):
+    dead_games = []
+    print('new games')
+    while games:
+        clock.tick(FPS)
+        text1 = fontBig.render(str(0), True, (0, 0, 0))
+        pygame.display.flip()
+        screen.fill(BLACK)
+        for mf in games:
+            for i in range(9):
+                pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
+                                 ((i + 1) * blockWidth + mf.dist, 0), ((i + 1) * blockWidth + mf.dist, HEIGHT))
+            for i in range(19):
+                pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
+                                 (mf.dist, (i + 1) * blockHeight), (500 + mf.dist, (i + 1) * blockHeight))
+            ded = 0
+            z = 0
+            for j in range(len(mf.form)):
                 if z == 0:
-                    if mf.form[j][i] == 1:
-                        pygame.draw.rect(screen, mf.color,
-                                         ((mf.x + i) * blockWidth, (mf.y + j) * blockHeight,
-                                          blockWidth, blockHeight))
-                        if mf.y + j + 1 == 20 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
-                            z = 1
-                            if mf.y == 0:
-                                mf = Figure()
-                            else:
-                                mf.isStop = True
-    if mf.isStop:
-        for j in range(len(mf.form)):
-            for i in range(len(mf.form[j])):
-                if mf.form[j][i] == 1:
-                    mf.gameField[mf.y + j][mf.x + i] = 1
-        while [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mf.gameField:
-            mf.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
-            mf.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-            mf.score += 10
-        mf.update()
-    if mf.timer == 0 and mf.y + len(mf.form) < 20:
-        mf.y += 1
-        mf.timer = 0
-    else:
-        mf.timer -= 1
-    for j in range(20):
-        for i in range(10):
-            if mf.gameField[j][i] == 1:
-                pygame.draw.rect(screen, LIGHT_GREY, (i * blockWidth, j * blockHeight, blockWidth, blockHeight))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    text1 = fontBig.render(str(mf.score), True, WHITE)
-    screen.blit(text1, (WIDTH // 2 - 7.5, 0))
-    pygame.display.flip()
-    mf1 = copy.deepcopy(mf)
-    strategy = choose_best_position(mf1)
-    if mf.form == [[1, 1], [1, 1]] and strategy == 'r':
-        strategy = 'd'
-    if strategy == 'r':
-        if len(mf.form) + mf.x < 10:
-            newFigure = []
-            for j in range(len(mf.form[0])):
-                newFigure.append([])
-                for i in range(len(mf.form)):
-                    newFigure[j].append(mf.form[i][j])
-            mf.form = list(reversed(newFigure))
-    elif strategy == 'd':
-        if mf.y + len(mf.form) + 1 < 19:
-            if mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[0])] == [0] * len(mf.form[0]):
+                    for i in range(len(mf.form[j])):
+                        if z == 0:
+                            if mf.form[j][i] == 1:
+                                pygame.draw.rect(screen, mf.color,
+                                                 ((mf.x + i) * blockWidth + mf.dist, (mf.y + j) * blockHeight,
+                                                  blockWidth, blockHeight))
+                                if mf.y + j + 1 == 20 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
+                                    z = 1
+                                    if mf.y == 0:
+                                        games.remove(mf)
+                                        dead_games.append(mf)
+                                        ded = 1
+                                    else:
+                                        mf.isStop = True
+            if ded == 1:
+                continue
+            if mf.isStop:
+                for j in range(len(mf.form)):
+                    for i in range(len(mf.form[j])):
+                        if mf.form[j][i] == 1:
+                            mf.gameField[mf.y + j][mf.x + i] = 1
+                while [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mf.gameField:
+                    mf.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+                    mf.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+                    mf.score += 10
+                mf.update()
+                mf.placed += 1
+            if mf.timer == 0 and mf.y + len(mf.form) < 20:
                 mf.y += 1
-    elif strategy == 'l':
-        if mf.x > 0:
-            k = True
-            for i in range(len(mf.form)):
-                if mf.form[i][0] + mf.gameField[mf.y + i][mf.x - 1] == 2:
-                    k = False
-            if k:
-                mf.x -= 1
-    elif strategy == 'i':
-        if mf.x + len(mf.form[0]) < 10:
-            k = True
-            for i in range(len(mf.form)):
-                if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[0])] == 2:
-                    k = False
-            if k:
-                mf.x += 1
+                mf.timer = 0
+            else:
+                mf.timer -= 1
+            for j in range(20):
+                for i in range(10):
+                    if mf.gameField[j][i] == 1:
+                        pygame.draw.rect(screen, LIGHT_GREY, (i * blockWidth + mf.dist, j * blockHeight, blockWidth, blockHeight))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            text1 = fontBig.render(str(mf.score), True, WHITE)
+            screen.blit(text1, (mf.dist + 250, 0))
+            mf1 = copy.deepcopy(mf)
+            strategy = choose_best_position(mf1)
+            if mf.form == [[1, 1], [1, 1]] and strategy == 'r':
+                strategy = 'd'
+            if strategy == 'r':
+                if len(mf.form) + mf.x < 10:
+                    newFigure = []
+                    for j in range(len(mf.form[0])):
+                        newFigure.append([])
+                        for i in range(len(mf.form)):
+                            newFigure[j].append(mf.form[i][j])
+                    mf.form = list(reversed(newFigure))
+            elif strategy == 'd':
+                if mf.y + len(mf.form) + 1 < 19:
+                    if mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[0])] == [0] * len(mf.form[0]):
+                        mf.y += 1
+            elif strategy == 'l':
+                if mf.x > 0:
+                    k = True
+                    for i in range(len(mf.form)):
+                        if mf.form[i][0] + mf.gameField[mf.y + i][mf.x - 1] == 2:
+                            k = False
+                    if k:
+                        mf.x -= 1
+            elif strategy == 'i':
+                if mf.x + len(mf.form[0]) < 10:
+                    k = True
+                    for i in range(len(mf.form)):
+                        if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[0])] == 2:
+                            k = False
+                    if k:
+                        mf.x += 1
+    best = 0
+    best_score = 0
+    for i in dead_games:
+        if best == 0:
+            best = i.ratio.copy()
+            best_score = i.placed
+        elif best_score < i.placed:
+            best = i.ratio.copy()
+            best_score = i.placed
+    for i in range(game_counts):
+        games.append(Figure(500 * i + distance * i, best.copy()))

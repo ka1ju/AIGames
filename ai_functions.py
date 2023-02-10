@@ -87,7 +87,7 @@ def quality(mf_def):
         score += 10
         mn += 1
     score *= mn
-    ratio = [0] * len(mf.form[0])
+    ratio = [0] * len(mf.gameField[0])
     for i in range(len(mf.gameField)):
         for j in range(len(mf.form[0])):
             if mf.gameField[i][j] == 0 and ratio[j] == 1:
@@ -95,8 +95,7 @@ def quality(mf_def):
             elif mf.gameField[i][j] == 1:
                 ratio[j] = 1
     holes1 = holes - holes_pre
-    print(holes1)
-    return score - holes1 + high
+    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high
 
 
 '''        mf1 = mf
