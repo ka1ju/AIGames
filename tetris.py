@@ -6,6 +6,7 @@ from random import randint
 from ai_functions import *
 import time
 import copy
+import json
 
 # Game parameters
 distance = 20
@@ -80,7 +81,7 @@ for i in range(19):
 
 games = []
 for i in range(game_counts):
-    games.append(Figure(500 * i + distance * i, [randint(-50, 50), randint(-50, 50), randint(-50, 50)]))
+    games.append(Figure(500 * i + distance * i, [randint(-50, 50), randint(-50, 50), randint(-50, 50), randint(-50, 50)]))
 text1 = fontBig.render(str(0), True, (0, 0, 0))
 while running:
     dead_games = []
@@ -91,6 +92,16 @@ while running:
         pygame.display.flip()
         screen.fill(BLACK)
         for mf in games:
+            if mf.score % 100 == 0 and mf.score > 99:
+                best_ratios = mf.ratio.copy()
+                best_placed = mf.placed
+                best_score = mf.score
+                q = {'best_ratios': best_ratios,
+                     'best_placed': best_placed,
+                     'best_score': best_score}
+                f = open('best_statics.json', 'w')
+                json.dump(q, f)
+                f.close()
             for i in range(9):
                 pygame.draw.line(screen, pygame.color.Color(100, 100, 100),
                                  ((i + 1) * blockWidth + mf.dist, 0), ((i + 1) * blockWidth + mf.dist, HEIGHT))
@@ -120,7 +131,7 @@ while running:
             if mf.isStop:
                 for j in range(len(mf.form)):
                     for i in range(len(mf.form[j])):
-                        if mf.form[j][i] == 1:
+                        if mf.form[j][i] == 1 and mf.y + j < 20:
                             mf.gameField[mf.y + j][mf.x + i] = 1
                 while [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mf.gameField:
                     mf.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
@@ -176,16 +187,29 @@ while running:
                             k = False
                     if k:
                         mf.x += 1
-    best = 0
+    best_ratios = 0
+    best_placed = 0
     best_score = 0
     for i in dead_games:
-        if best == 0:
-            best = i.ratio.copy()
-            best_score = i.placed
-        elif best_score < i.placed:
-            best = i.ratio.copy()
-            best_score = i.placed
-    games.append(Figure(500 * 0 + distance * 0, best.copy()))
+        if best_ratios == 0:
+            best_ratios = i.ratio.copy()
+            best_placed = i.placed
+            best_score = i.score
+        elif best_score < i.score:
+            best_ratios = i.ratio.copy()
+            best_placed = i.placed
+            best_score = i.score
+        elif best_placed < i.placed and best_score == i.score:
+            best_ratios = i.ratio.copy()
+            best_placed = i.placed
+            best_score = i.score
+    q = {'best_ratios': best_ratios,
+         'best_placed': best_placed,
+         'best_score': best_score}
+    f = open('best_statics.json', 'w')
+    json.dump(q, f)
+    f.close()
+    games.append(Figure(500 * 0 + distance * 0, best_ratios.copy()))
     for i in range(1, game_counts):
-        ratio = mutation(best.copy()).copy()
+        ratio = mutation(best_ratios.copy()).copy()
         games.append(Figure(500 * i + distance * i, ratio))

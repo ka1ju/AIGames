@@ -5,7 +5,7 @@ from random import randint
 
 def mutation(ratios):
     for i in range(len(ratios)):
-        ratios[i] += randint(-10, 10)
+        ratios[i] += randint(-50, 50)
     return ratios
 
 
@@ -64,6 +64,10 @@ def choose_best_position(mf_def1):
                                         best_quality = q
                                         best_strategy = y[0]
                                         best_actions_count = len(y)
+                                    elif q == best_quality and y == 'd':
+                                        best_quality = q
+                                        best_strategy = y[0]
+                                        best_actions_count = len(y)
                 if mf.y + len(mf.form) + 1 < 20:
                     mf.y += 1
 
@@ -101,8 +105,12 @@ def quality(mf_def):
                 holes += 1
             elif mf.gameField[i][j] == 1:
                 ratio[j] = 1
+    T_chance = 1
+    for i in range(len(mf.gameField)):
+        if mf.gameField[i][-1] == 1:
+            T_chance -= 1
     holes1 = holes - holes_pre
-    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high
+    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high + mf.ratio[3] * T_chance
 
 
 '''        mf1 = mf
