@@ -185,5 +185,7 @@ while running:
         elif best_score < i.placed:
             best = i.ratio.copy()
             best_score = i.placed
-    for i in range(game_counts):
-        games.append(Figure(500 * i + distance * i, best.copy()))
+    games.append(Figure(500 * 0 + distance * 0, best.copy()))
+    for i in range(1, game_counts):
+        ratio = mutation(best.copy()).copy()
+        games.append(Figure(500 * i + distance * i, ratio))

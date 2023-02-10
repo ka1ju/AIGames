@@ -1,5 +1,12 @@
 import random
 import copy
+from random import randint
+
+
+def mutation(ratios):
+    for i in range(len(ratios)):
+        ratios[i] += randint(-10, 10)
+    return ratios
 
 
 def choose_best_position(mf_def1):
