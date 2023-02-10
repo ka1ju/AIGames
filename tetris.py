@@ -128,15 +128,19 @@ while running:
                                         mf.isStop = True
             if ded == 1:
                 continue
+            iop = 0
+            scoc = 0
             if mf.isStop:
                 for j in range(len(mf.form)):
                     for i in range(len(mf.form[j])):
                         if mf.form[j][i] == 1 and mf.y + j < 20:
                             mf.gameField[mf.y + j][mf.x + i] = 1
                 while [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mf.gameField:
+                    iop += 1
                     mf.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
                     mf.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-                    mf.score += 10
+                    scoc += 10
+                mf.score += scoc * iop
                 mf.update()
                 mf.placed += 1
             if mf.timer == 0 and mf.y + len(mf.form) < 20:
