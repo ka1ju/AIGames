@@ -159,12 +159,8 @@ def quality(mf_def):
                 holes += 1
             elif mf.gameField[i][j] == 1:
                 ratio[j] = 1
-    T_chance = 1
-    for i in range(len(mf.gameField)):
-        if mf.gameField[i][-1] == 1:
-            T_chance -= 1
     holes1 = holes - holes_pre
-    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high + mf.ratio[3] * T_chance
+    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high + mf.ratio[3] * (mf.y + 20)
 
 
 '''        mf1 = mf
