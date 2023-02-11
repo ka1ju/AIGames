@@ -10,7 +10,7 @@ import json
 
 # Game parameters
 distance = 20
-game_counts = 4
+game_counts = 20
 WIDTH = 500 * game_counts + distance * game_counts
 HEIGHT = 1000
 FPS = 60
@@ -49,6 +49,7 @@ figureTypes = [
 # Class
 class Figure:
     def __init__(self, dist, ratios):
+        self.chosen = False
         self.placed =0
         self.dist = dist
         self.ratio = ratios.copy()
@@ -56,7 +57,7 @@ class Figure:
         self.y = 0
         self.form = random.choice(figureTypes)
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
-        self.timer = FPS // 2
+        self.timer = 0
         self.isStop = False
         self.gameField = []
         self.score = 0
@@ -131,6 +132,7 @@ while running:
             iop = 0
             scoc = 0
             if mf.isStop:
+                mf.chosen = False
                 for j in range(len(mf.form)):
                     for i in range(len(mf.form[j])):
                         if mf.form[j][i] == 1 and mf.y + j < 20:
@@ -160,37 +162,42 @@ while running:
             text1 = fontBig.render(str(mf.score), True, WHITE)
             screen.blit(text1, (mf.dist + 250, 0))
             mf1 = copy.deepcopy(mf)
-            strategy = choose_best_position(mf1)
-            if mf.form == [[1, 1], [1, 1]] and strategy == 'r':
-                strategy = 'd'
-            if strategy == 'r':
-                if len(mf.form) + mf.x < 10:
-                    newFigure = []
-                    for j in range(len(mf.form[0])):
-                        newFigure.append([])
+            if mf.chosen:
+                strategy_comb = 'd'
+            else:
+                strategy_comb = choose_best_position(mf1)
+                mf.chosen = True
+            if mf.form == [[1, 1], [1, 1]] and strategy_comb[0] == 'r':
+                strategy_comb[0] = 'd'
+            for strategy in strategy_comb:
+                if strategy == 'r':
+                    if len(mf.form) + mf.x < 10:
+                        newFigure = []
+                        for j in range(len(mf.form[0])):
+                            newFigure.append([])
+                            for i in range(len(mf.form)):
+                                newFigure[j].append(mf.form[i][j])
+                        mf.form = list(reversed(newFigure))
+                elif strategy == 'd':
+                    if mf.y + len(mf.form) + 1 < 19:
+                        if mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[0])] == [0] * len(mf.form[0]):
+                            mf.y += 1
+                elif strategy == 'l':
+                    if mf.x > 0:
+                        k = True
                         for i in range(len(mf.form)):
-                            newFigure[j].append(mf.form[i][j])
-                    mf.form = list(reversed(newFigure))
-            elif strategy == 'd':
-                if mf.y + len(mf.form) + 1 < 19:
-                    if mf.gameField[mf.y + len(mf.form)][mf.x:mf.x + len(mf.form[0])] == [0] * len(mf.form[0]):
-                        mf.y += 1
-            elif strategy == 'l':
-                if mf.x > 0:
-                    k = True
-                    for i in range(len(mf.form)):
-                        if mf.form[i][0] + mf.gameField[mf.y + i][mf.x - 1] == 2:
-                            k = False
-                    if k:
-                        mf.x -= 1
-            elif strategy == 'i':
-                if mf.x + len(mf.form[0]) < 10:
-                    k = True
-                    for i in range(len(mf.form)):
-                        if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[0])] == 2:
-                            k = False
-                    if k:
-                        mf.x += 1
+                            if mf.form[i][0] + mf.gameField[mf.y + i][mf.x - 1] == 2:
+                                k = False
+                        if k:
+                            mf.x -= 1
+                elif strategy == 'i':
+                    if mf.x + len(mf.form[0]) < 10:
+                        k = True
+                        for i in range(len(mf.form)):
+                            if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[0])] == 2:
+                                k = False
+                        if k:
+                            mf.x += 1
     best_ratios = 0
     best_placed = 0
     best_score = 0
