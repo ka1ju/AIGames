@@ -62,11 +62,11 @@ def choose_best_position(mf_def1):
                                         y = 'd'
                                     if q > best_quality:
                                         best_quality = q
-                                        best_strategy = y[0]
+                                        best_strategy = y
                                         best_actions_count = len(y)
                                     elif q == best_quality and y == 'd':
                                         best_quality = q
-                                        best_strategy = y[0]
+                                        best_strategy = y
                                         best_actions_count = len(y)
                 if mf.y + len(mf.form) + 1 < 20:
                     mf.y += 1
