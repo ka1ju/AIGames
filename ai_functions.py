@@ -160,7 +160,7 @@ def quality(mf_def):
             elif mf.gameField[i][j] == 1:
                 ratio[j] = 1
     holes1 = holes - holes_pre
-    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high + mf.ratio[3] * (mf.y + 20)
+    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high + mf.ratio[3] * (mf.x + 20)
 
 
 '''        mf1 = mf
