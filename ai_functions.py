@@ -20,7 +20,60 @@ def choose_best_position(mf_def1):
         for u in range(10):
             y = o[0]
             y = y + f * u
-            f = 'i'
+            mf = copy.deepcopy(mf_def)
+            z = 0
+            for t in y:
+                if t == 'r':
+                    if mf.y + len(mf.form) < 19:
+                        if len(mf.form) + mf.x < 10:
+                            newFigure = []
+                            for j in range(len(mf.form[0])):
+                                newFigure.append([])
+                                for i in range(len(mf.form)):
+                                    newFigure[j].append(mf.form[i][j])
+                            mf.form = list(reversed(newFigure))
+                elif t == 'l':
+                    if mf.y + len(mf.form) < 19:
+                        if mf.x > 0:
+                            k = True
+                            for i in range(len(mf.form)):
+                                if mf.form[i][0] + mf.gameField[mf.y + i][mf.x - 1] == 2:
+                                    k = False
+                            if k:
+                                mf.x -= 1
+                elif t == 'i':
+                    if mf.y + len(mf.form) < 19:
+                        if mf.x + len(mf.form[0]) < 10:
+                            k = True
+                            for i in range(len(mf.form)):
+                                if mf.form[i][-1] + mf.gameField[mf.y + i][mf.x + len(mf.form[i])] == 2:
+                                    k = False
+                            if k:
+                                mf.x += 1
+            while z == 0:
+                for j in range(len(mf.form)):
+                    for i in range(len(mf.form[j])):
+                        if mf.form[j][i] == 1:
+                            if mf.y + len(mf.form) + 1 > 19 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
+                                if z == 0:
+                                    z = 1
+                                    q = quality(mf)
+                                    if y == '':
+                                        y = 'd'
+                                    if q > best_quality:
+                                        best_quality = q
+                                        best_strategy = y[0]
+                                        best_actions_count = len(y)
+                                    elif q == best_quality and y == 'd':
+                                        best_quality = q
+                                        best_strategy = y[0]
+                                        best_actions_count = len(y)
+                if mf.y + len(mf.form) + 1 < 20:
+                    mf.y += 1
+        f = 'i'
+        for u in range(10):
+            y = o[0]
+            y = y + f * u
             mf = copy.deepcopy(mf_def)
             z = 0
             for t in y:
@@ -54,7 +107,8 @@ def choose_best_position(mf_def1):
                 for j in range(len(mf.form)):
                     for i in range(len(mf.form[j])):
                         if mf.form[j][i] == 1:
-                            if mf.y + len(mf.form) + 1 > 19 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
+                            if mf.y + len(mf.form) + 1 > 19 or (
+                                    mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
                                 if z == 0:
                                     z = 1
                                     q = quality(mf)
