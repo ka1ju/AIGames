@@ -134,7 +134,7 @@ def quality(mf_def):
     holes_pre = 0
     holes = 0
     mn = 0
-    high = mf.y
+    high = mf.y + len(mf.form)
     ratio = [0] * len(mf.gameField[0])
     for i in range(len(mf.gameField)):
         for j in range(len(mf.gameField[0])):

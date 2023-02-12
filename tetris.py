@@ -44,11 +44,15 @@ figureTypes = [
     [[1, 0, 0], [1, 1, 1]],
     [[1, 1, 1, 1]],
     [[1, 1], [1, 1]]]
+figures_list = []
+for i in range(100):
+    figures_list.append(figureTypes[randint(0, 6)])
 
 
 # Class
 class Figure:
-    def __init__(self, dist, ratios):
+    def __init__(self, dist, ratios, figure_number):
+        self.number = figure_number
         self.chosen = False
         self.placed =0
         self.dist = dist
@@ -65,9 +69,12 @@ class Figure:
             self.gameField.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def update(self):
+        self.number += 1
+        if self.number >= len(figures_list):
+            self.number = 0
         self.x = randint(0, 6)
         self.y = 0
-        self.form = random.choice(figureTypes)
+        self.form = figures_list[self.number]
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
         self.timer = FPS // 2
         self.isStop = False
@@ -82,7 +89,7 @@ for i in range(19):
 
 games = []
 for i in range(game_counts):
-    games.append(Figure(500 * i + distance * i, [randint(-50, 50), randint(-50, 50), randint(-50, 50), randint(-50, 50)]))
+    games.append(Figure(500 * i + distance * i, [1, -1, 1, 1], 0))
 text1 = fontBig.render(str(0), True, (0, 0, 0))
 while running:
     dead_games = []
@@ -220,7 +227,8 @@ while running:
     f = open('best_statics.json', 'w')
     json.dump(q, f)
     f.close()
-    games.append(Figure(500 * 0 + distance * 0, best_ratios.copy()))
+    number = randint(0, 99)
+    games.append(Figure(500 * 0 + distance * 0, best_ratios.copy(), number))
     for i in range(1, game_counts):
         ratio = mutation(best_ratios.copy()).copy()
-        games.append(Figure(500 * i + distance * i, ratio))
+        games.append(Figure(500 * i + distance * i, ratio, number))
