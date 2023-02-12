@@ -46,7 +46,7 @@ figureTypes = [
     [[1, 1], [1, 1]]]
 figures_list = []
 for i in range(100):
-    figures_list.append(figureTypes[randint(0, 6)])
+    figures_list.append(figureTypes[randint(0, 6)].copy())
 
 
 # Class
@@ -54,12 +54,12 @@ class Figure:
     def __init__(self, dist, ratios, figure_number):
         self.number = figure_number
         self.chosen = False
-        self.placed =0
+        self.placed = 0
         self.dist = dist
         self.ratio = ratios.copy()
         self.x = randint(0, 6)
         self.y = 0
-        self.form = random.choice(figureTypes)
+        self.form = figures_list[figure_number].copy()
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
         self.timer = 0
         self.isStop = False
@@ -74,7 +74,7 @@ class Figure:
             self.number = 0
         self.x = randint(0, 6)
         self.y = 0
-        self.form = figures_list[self.number]
+        self.form = figures_list[self.number].copy()
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
         self.timer = FPS // 2
         self.isStop = False
