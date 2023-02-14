@@ -124,7 +124,6 @@ def choose_best_position(mf_def1):
                                         best_actions_count = len(y)
                 if mf.y + len(mf.form) + 1 < 20:
                     mf.y += 1
-
     return best_strategy
 
 
@@ -135,7 +134,7 @@ def quality(mf_def):
     holes = 0
     mn = 0
     high = mf.y + len(mf.form)
-    ratio = [0] * len(mf.gameField[0])
+    ratio = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for i in range(len(mf.gameField)):
         for j in range(len(mf.gameField[0])):
             if mf.gameField[i][j] == 0 and ratio[j] == 1:
@@ -145,16 +144,16 @@ def quality(mf_def):
     for j in range(len(mf.form)):
         for i in range(len(mf.form[j])):
             if mf.form[j][i] == 1:
-                mf.gameField[mf.y + j - 1][mf.x + i - 1] = 1
+                mf.gameField[mf.y + j + 1][mf.x + i] = 1
     while [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] in mf.gameField:
         mf.gameField.remove([1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
         mf.gameField.insert(0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         score += 10
         mn += 1
     score *= mn
-    ratio = [0] * len(mf.gameField[0])
+    ratio = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for i in range(len(mf.gameField)):
-        for j in range(len(mf.form[0])):
+        for j in range(len(mf.gameField[0])):
             if mf.gameField[i][j] == 0 and ratio[j] == 1:
                 holes += 1
             elif mf.gameField[i][j] == 1:

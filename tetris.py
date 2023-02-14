@@ -89,9 +89,10 @@ for i in range(19):
 
 games = []
 for i in range(game_counts):
-    games.append(Figure(500 * i + distance * i, [1, -1, 1, 1], 0))
+    games.append(Figure(500 * i + distance * i, [randint(-50, 50), randint(-50, 50), randint(-50, 50), randint(-50, 50)], 0))
 text1 = fontBig.render(str(0), True, (0, 0, 0))
 while running:
+    clock.tick(60)
     dead_games = []
     print('new games')
     while games:
