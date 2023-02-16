@@ -9,7 +9,7 @@ def mutation(ratios):
     return ratios
 
 
-def choose_best_position(mf_def1):
+def choose_best_position(mf_def1, is_next):
     mf_def = copy.deepcopy(mf_def1)
     variants = [['', mf_def], ['r', mf_def], ['rr', mf_def], ['rrr', mf_def]]
     best_actions_count = 0
@@ -57,7 +57,7 @@ def choose_best_position(mf_def1):
                             if mf.y + len(mf.form) + 1 > 19 or (mf.gameField[mf.y + j + 1][mf.x + i] == 1):
                                 if z == 0:
                                     z = 1
-                                    q = quality(mf)
+                                    q = quality(mf, is_next)
                                     if y == '':
                                         y = 'd'
                                     if q > best_quality:
@@ -111,7 +111,7 @@ def choose_best_position(mf_def1):
                                     mf.gameField[mf.y + j + 1][mf.x + i] == 1 and mf.form[j][i] == 1):
                                 if z == 0:
                                     z = 1
-                                    q = quality(mf)
+                                    q = quality(mf, is_next)
                                     if y == '':
                                         y = 'd'
                                     if q > best_quality:
@@ -124,10 +124,10 @@ def choose_best_position(mf_def1):
                                         best_actions_count = len(y)
                 if mf.y + len(mf.form) + 1 < 20:
                     mf.y += 1
-    return best_strategy
+    return best_strategy, best_quality
 
 
-def quality(mf_def):
+def quality(mf_def, is_next):
     mf = copy.deepcopy(mf_def)
     score = 0
     holes_pre = 0
@@ -163,7 +163,15 @@ def quality(mf_def):
             elif mf.gameField[i][j] == 1:
                 ratio[j] = 1
     holes1 = holes - holes_pre
-    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high + mf.ratio[3] * (mf.x + 20)
+    if is_next:
+        mf1 = copy.deepcopy(mf)
+        mf1.y = 0
+        mf1.x = 3
+        mf1.form = mf.next_form.copy()
+        quality_next = choose_best_position(mf1, True)[1]
+    else:
+        quality_next = 0
+    return mf.ratio[0]*score - mf.ratio[1]*holes1 + mf.ratio[2]*high + mf.ratio[3] * (mf.x + 20) + quality_next
 
 
 '''        mf1 = mf

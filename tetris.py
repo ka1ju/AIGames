@@ -60,6 +60,10 @@ class Figure:
         self.x = randint(0, 6)
         self.y = 0
         self.form = figures_list[figure_number].copy()
+        n = figure_number + 1
+        if n >= len(figures_list):
+            n = 0
+        self.next_form = figures_list[n].copy()
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
         self.timer = 0
         self.isStop = False
@@ -74,7 +78,11 @@ class Figure:
             self.number = 0
         self.x = randint(0, 6)
         self.y = 0
-        self.form = figures_list[self.number].copy()
+        n = self.number + 1
+        if n >= len(figures_list):
+            n = 0
+        self.form = self.next_form.copy()
+        self.next_form = figures_list[n].copy()
         self.color = random.choice([RED, YELLOW, GREEN, CYAN, BLUE, PURPLE])
         self.timer = FPS // 2
         self.isStop = False
@@ -89,7 +97,7 @@ for i in range(19):
 
 games = []
 for i in range(game_counts):
-    games.append(Figure(500 * i + distance * i, [randint(-50, 50), randint(-50, 50), randint(-50, 50), randint(-50, 50)], 0))
+    games.append(Figure(500 * i + distance * i, [37, 499, 450, -101], 0))
 text1 = fontBig.render(str(0), True, (0, 0, 0))
 while running:
     clock.tick(60)
@@ -173,7 +181,7 @@ while running:
             if mf.chosen:
                 strategy_comb = 'd'
             else:
-                strategy_comb = choose_best_position(mf1)
+                strategy_comb = choose_best_position(mf1, False)[0]
                 mf.chosen = True
             if mf.form == [[1, 1], [1, 1]] and strategy_comb[0] == 'r':
                 strategy_comb[0] = 'd'
